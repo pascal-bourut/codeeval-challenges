@@ -3,14 +3,13 @@ var solutions = null;
 var min_diff = 0;
 
 function efficient_delivery( tankers, idx, oil, allocation){
-    
     if( oil > 0 ){
         var capacity = tankers[idx];
         var nb = tankers.length;
         var last_tanker = false;
         if( capacity ){
             var cnt = Math.floor(oil / capacity);
-            var rest = oil%capacity;
+            var rest = oil - cnt * capacity;
             
             if( idx == (nb-1) ){
                 last_tanker = true;
@@ -22,6 +21,7 @@ function efficient_delivery( tankers, idx, oil, allocation){
                 else{
                     oil -= cnt * capacity;
                 }
+                
             }
             else{
                 for(var i = 0; i <= cnt ; i++ ){
@@ -37,7 +37,6 @@ function efficient_delivery( tankers, idx, oil, allocation){
         }
         
         if( last_tanker && oil>0 ){
-            
             // no more tankers available
             // amount of oil left < amount possible on a tanker
             var diff = Number.POSITIVE_INFINITY;
@@ -49,7 +48,6 @@ function efficient_delivery( tankers, idx, oil, allocation){
             if( diff < min_diff ){
                 min_diff = diff;
             }
-            // console.log(min_diff);
         }
     }
     
@@ -69,8 +67,8 @@ function solution_cmp(a,b){
     var aa = '';
     var bb = '';
     for(var i=0, cnt=a.length ; i < cnt ; i++){
-        aa += new Array(5 - a[i].length).join('0') + a[i];
-        bb += new Array(5 - b[i].length).join('0') + b[i];
+        aa += new Array(4 - a[i].length).join('0') + a[i];
+        bb += new Array(4 - b[i].length).join('0') + b[i];
     }
     return aa > bb ? 1 : -1;
 }
@@ -86,7 +84,7 @@ fs.readFileSync(process.argv[2]).toString().split('\n').forEach(function (line) 
         var oil = Number(tmp[1]);
         tankers = tankers.substr(1,tankers.length-2).split(',').reverse();
         
-        min_diff = oil - 1;
+        min_diff = oil + 1;
         solutions = [];
         
         for(var i=0, cnt=tankers.length; i < cnt ; i++){
